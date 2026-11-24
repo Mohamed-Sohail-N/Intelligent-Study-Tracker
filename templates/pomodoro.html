@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pomodoro History</title>
+</head>
+<body>
+
+<h2>📊 Pomodoro History</h2>
+
+<table border="1">
+<tr>
+    <th>Type</th>
+    <th>Duration (sec)</th>
+    <th>Date</th>
+</tr>
+
+{% for d in data %}
+<tr>
+    <td>{{ d[0] }}</td>
+    <td>{{ d[1] }}</td>
+    <td>{{ d[2] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

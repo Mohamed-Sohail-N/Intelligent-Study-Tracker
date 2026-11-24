@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>🔥 Streak</title>
+
+<style>
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+    text-align:center;
+}
+
+.container{
+    margin-top:50px;
+}
+
+.card{
+    background: rgba(255,255,255,0.08);
+    padding:30px;
+    border-radius:20px;
+    width:350px;
+    margin:auto;
+    backdrop-filter: blur(15px);
+}
+
+.streak-number{
+    font-size:60px;
+    color:#ff9800;
+}
+
+.days{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+}
+
+.day{
+    width:30px;
+    height:30px;
+    margin:5px;
+    border-radius:8px;
+    background: rgba(255,255,255,0.2);
+}
+
+.active{
+    background:#ff5722;
+    box-shadow:0 0 10px #ff5722;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🔥 Your Streak</h2>
+        <div class="streak-number">{{ current_streak }}</div>
+        <p>days</p>
+
+        <p>Last Active: {{ last_date }}</p>
+
+        <h3>Last 7 Days</h3>
+
+        <div class="days">
+            {% for d in last_7_days %}
+                <div class="day {% if d==1 %}active{% endif %}"></div>
+            {% endfor %}
+        </div>
+
+        <br>
+        <a href="/" style="color:#00f2fe;">⬅ Back</a>
+
+    </div>
+</div>
+
+</body>
+</html>

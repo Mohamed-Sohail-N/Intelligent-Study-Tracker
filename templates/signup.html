@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Signup</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#ff512f,#dd2476);
+    font-family:'Poppins',sans-serif;
+}
+
+.container{
+    width:360px;
+    padding:40px;
+    border-radius:20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    box-shadow:0 0 40px rgba(0,0,0,0.4);
+    text-align:center;
+    color:white;
+}
+
+.input-box{
+    position:relative;
+    margin-bottom:20px;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background: rgba(255,255,255,0.15);
+    color:white;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background: linear-gradient(90deg,#ff416c,#ff4b2b);
+    color:white;
+    cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🚀 Create Account</h2>
+
+    <form method="POST">
+        <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+
+        <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <button>Create Account</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📅 Calendar Planner</h1>
+
+    <a href="/">⬅ Back</a>
+
+    <h2>Your Tasks</h2>
+
+    {% for task in tasks %}
+    <div class="task">
+        <strong>{{ task.date }}</strong>
+        <p>{{ task.task }}</p>
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Database
+*.db
+
+# Secrets
+.env
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db

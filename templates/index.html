@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+#timer {
+    font-size: 50px;
+    text-align: center;
+    margin: 10px 0;
+    color: #00f2fe;
+}
+
+#mode {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+    
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    display:flex;
+    height:100vh;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:220px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:#00f2fe;
+    color:black;
+}
+
+/* MAIN */
+.main{
+    flex:1;
+    padding:20px;
+    overflow:auto;
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+/* CARDS */
+.card{
+    background: rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:20px;
+    backdrop-filter: blur(20px);
+    margin-bottom:20px;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* INPUT */
+input, button{
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    margin:5px;
+}
+
+input{
+    width:30%;
+}
+
+button{
+    background:#00f2fe;
+    cursor:pointer;
+}
+
+/* TASK */
+.task{
+    display:flex;
+    justify-content:space-between;
+    padding:10px;
+    margin-top:10px;
+    background: rgba(255,255,255,0.05);
+    border-radius:10px;
+}
+
+.task.done{
+    text-decoration:line-through;
+    opacity:0.6;
+}
+
+.actions a{
+    margin-left:10px;
+    text-decoration:none;
+    color:#00f2fe;
+}
+
+/* AI BOX */
+.ai{
+    white-space:pre-line;
+    color:#00f2fe;
+}
+</style>
+
+</head>
+
+<script>
+let time = 1500;
+let timerInterval = null;
+let isBreak = false;
+
+function updateDisplay() {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    document.getElementById("timer").innerText =
+        `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+function saveSession(type, duration) {
+    fetch('/save_pomodoro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `type=${type}&duration=${duration}`
+    });
+}
+
+function startTimer() {
+    if (timerInterval) return;
+
+    let originalTime = time;
+
+    timerInterval = setInterval(() => {
+        time--;
+
+        if (time <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            let sessionType = isBreak ? "break" : "focus";
+
+            // SAVE DATA 🔥
+            saveSession(sessionType, originalTime);
+
+            alert(isBreak ? "Break over! Back to work 💪" : "Time for a break 😎");
+
+            if (!isBreak) {
+                time = 300;
+                document.getElementById("mode").innerText = "Break Mode";
+            } else {
+                time = 1500;
+                document.getElementById("mode").innerText = "Focus Mode";
+            }
+
+            isBreak = !isBreak;
+        }
+
+        updateDisplay();
+    }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    time = 1500;
+    isBreak = false;
+    document.getElementById("mode").innerText = "Focus Mode";
+    updateDisplay();
+}
+
+updateDisplay();
+</script>
+
+<body>
+
+    <div class="card" style="text-align:center;">
+    <h2>🔥 Current Streak</h2>
+    <h1 style="font-size:50px; color:#ff9800;">
+        {{ streak }} Days
+    </h1>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>⚡ SmartTrack</h2>
+    <a href="/">🏠 Home</a>
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/logout">🚪 Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="header">
+        <h1>Welcome 👋</h1>
+    </div>
+
+    <!-- ADD TASK -->
+    <div class="card">
+        <h3>Add Task</h3>
+        <form method="POST" action="/add">
+            <input type="text" name="task" placeholder="Task" required>
+            <input type="date" name="date" required>
+            <button>Add</button>
+        </form>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+        <form method="POST" action="/search">
+            <input type="text" name="keyword" placeholder="Search task...">
+            <button>Search</button>
+        </form>
+    </div>
+
+    <!-- TASK LIST -->
+    <div class="card">
+        <h3>Your Tasks</h3>
+
+        {% for t in tasks %}
+        <div class="task {% if t.completed %}done{% endif %}">
+            <div>
+                <b>{{ t.task }}</b><br>
+                <small>{{ t.date }}</small>
+            </div>
+
+            <div class="actions">
+                {% if not t.completed %}
+                <a href="/complete/{{t.id}}">✔</a>
+                {% endif %}
+                <a href="/delete/{{t.id}}">🗑</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- AI -->
+    <div class="card ai">
+        <h3>🤖 AI Suggestions</h3>
+        {{ ai_tip }}
+        <br><br>
+        {{ final_ai }}
+    </div>
+
+    <div class="card">
+    <h3>⏱️ Pomodoro Timer</h3>
+
+    <h1 id="timer">25:00</h1>
+
+    <button onclick="startTimer()">▶ Start</button>
+    <button onclick="pauseTimer()">⏸ Pause</button>
+    <button onclick="resetTimer()">🔄 Reset</button>
+
+    <p id="mode">Focus Mode</p>
+</div>
+
+</div>
+
+</body>
+</html>
