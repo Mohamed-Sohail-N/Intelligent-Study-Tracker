@@ -104,6 +104,20 @@ http://127.0.0.1:5000/
 - Provide a structured way to monitor academic tasks.
 - Make study planning easier through productivity tools.
 
+## 📸 Application Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Calendar Planner
+![Calendar](screenshots/calendar.png)
+
+### Pomodoro Timer
+![Pomodoro](screenshots/pomodoro.png)
+
+### Task Management
+![Tasks](screenshots/tasks.png)
+
 ## 🚀 Future Improvements
 
 - AI-powered personalized study recommendations.
